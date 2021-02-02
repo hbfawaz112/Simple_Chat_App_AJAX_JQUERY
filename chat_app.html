@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Chat App</title>
+    <style>
+        #messages{
+            max-height:300px;
+            overflow:auto
+        }
+    </style>
+</head>
+<body>
+   
+    <script>
+        var w;
+        if(typeof(Worker) !== "undefined") {
+           if(typeof(w) == "undefined") {
+             w = new Worker('Worker.js');
+           }
+           w.onmessage = function(event) {
+           // alert(event.data);
+           load();
+           };
+         } else {
+           document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Workers...";
+         }
+
+        var start=0;
+        load();//call the function load first time
+        var url='server.php';
+      
+        $(document).ready(function(){
+            // this button to logout from the page to indexs
+          $("#logout").click(function(){
+                //  alert("Hello");
+                  window.location = "index.html";
+              })
+              var myname;
+              //get the value of name from local storage and put it inside a variable 
+            if (typeof(Storage) !== "undefined") {
+                myname = localStorage.getItem("myname");
+            } else {
+                alert("Sorry, your browser does not support Web Storage...");
+            }
+            
+         $("#usernamee").text(myname)
+
+         
+           
+           //when we submit a message
+         $("#send").click(function(){
+             var mymessage = $("#themessage").val(); // get the message from input
+            
+             //define the messageObject to pass it in a AJAX request as a POST request using $.ajax({})
+             //to the server.php page
+             var messageObject = {
+                'name': myname,
+                'message' : mymessage
+             };
+
+             if(mymessage!="")
+             {
+                 $.ajax({
+                     url: url,
+                     type: 'POST',
+                     dataType: 'text',
+                     data:messageObject,
+                     /********************/
+                     success: function(response) {
+                        // loadMessages();
+                        load();
+                     },
+                     error:function(XMLHttpRequest , textStatus, errorThrow)
+                     {
+                         alert(errorThrow);
+                     }
+                 })
+             }
+
+             $("#themessage").val('');
+         })
+        })
+
+       
+
+
+
+
+
+         function load(){
+             
+           
+            $.get('server.php?start='+start, function(result){
+                
+                if(result){
+           {     data = $.parseJSON(result);
+                $.each(data, function(i, item) {
+
+                    start=item.ID;
+                    $('#messages').append('<small class="msg"><b style="color:blue">'+item.Name+'></b> ' + item.Content +'</small><br>');
+                    
+                    
+
+                });
+                $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight});
+            };
+           
+            
+              
+
+                }
+               
+                 
+             });
+         }
+
+
+
+         //function renderMessage(item){
+           //  console.log(item);
+         //}
+        
+        
+    </script>
+
+   
+
+    <div class="row">
+        <div class="col">
+            <button id="logout" class="btn-danger">LogOut</button>
+        </div>
+
+        <div class="col-8">
+            
+            <div class="card">
+                <div class="card-header">
+                    <h6>Chats </h6> <b>Weclome <span id="usernamee"></span> ,Type your message here and press SEND.</b>
+                </div>
+                <div class="card-body">
+                          <div class="card" style="height:350px;">
+                        <div class="card-body">
+                             
+                           <div id="messages">
+
+                           </div>
+                            
+                        </div>
+                      </div>
+                    <br>
+                    <div class="form-group">
+                       <input type="text" id="themessage" size="35" > 
+                       <button id="send" type="submit" class="btn-primary">SEND</button>
+                    </div>
+                </div>
+             </div>
+
+
+        </div>
+        
+        <div class="col">
+
+        </div>
+        
+    </div>
+
+</body>
+</html>

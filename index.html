@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<div class="jumbotron text-center">
+  <h2>Welcome To Our Chat App , Enjoy Chatting With Our Users</h2>
+  <h4>Enter Your Name To Start </h4> 
+</div>
+  
+<div class="container">
+  
+    <div class="row">
+        <div class="col">
+            <img src="https://cdn2.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/1024/messages_5122x.png"
+            width="70%" height="70%"
+            />
+        </div>
+
+        <div class="col">
+            <h5>Your Name </h5>
+      
+                <form id="myform">
+                    <div class="form-group">
+                    
+                    <input type="text" class="form-control" placeholder="Enter your name" id="name">
+                    <br>
+                    <input class="btn-primary" style="margin-left: 120px;" type="submit" id="btn" value="Continue" />
+                    
+                    </div>
+                </form>
+                <p id="err"></p>
+        </div>
+        
+        <div class="col">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsfpZuYjZcGvYAAV2ju3XNHbSCexYmKpbrFw&usqp=CAU"
+            width="70%" height="70%"
+            />
+        </div>
+        
+    </div>
+</div>
+
+
+      
+<script>
+
+    // to get the name from input and put it in a local storage
+    $(document).ready(function(){
+        $("#myform").submit(function(event){
+            event.preventDefault();
+            var myname = $("#name").val();
+             if (typeof(Storage) !== "undefined") {
+                localStorage.setItem("myname", myname);
+                window.location = "chat_app.html";
+              } 
+              else {    
+                $("#err").text("Sorry, your browser does not support Web Storage...");
+              }
+        });
+    })
+</script>
+
+
+</body>
+</html>
